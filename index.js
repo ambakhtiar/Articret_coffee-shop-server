@@ -1,6 +1,6 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -24,7 +24,7 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        // await client.connect();
 
         const coffeeCollection = client.db("Coffee_shop_DB").collection("coffees");
         const userCollection = client.db("Coffee_shop_DB").collection("user");
@@ -41,7 +41,7 @@ async function run() {
                 const result = await cursor.toArray();
                 res.send(result);
             } catch (error) {
-                console.error("Error fetching coffees:", error);
+                // console.error("Error fetching coffees:", error);
                 res.status(500).send({ error: 'Internal Server Error' });
             }
         });
@@ -65,7 +65,7 @@ async function run() {
 
         app.post('/coffees', async (req, res) => {
             const newCoffee = req.body;
-            console.log(newCoffee);
+            //console.log(newCoffee);
             const result = await coffeeCollection.insertOne(newCoffee);
             res.send(result);
         })
@@ -75,7 +75,7 @@ async function run() {
             const filter = { _id: new ObjectId(id) };
             const option = { upsert: true };
             const updatedCoffee = req.body;
-            console.log(updatedCoffee);
+            //console.log(updatedCoffee);
 
             const coffee = {
                 $set: {
@@ -117,13 +117,13 @@ async function run() {
 
         app.post('/users', async (req, res) => {
             const newUser = req.body;
-            console.log(newUser);
+            //console.log(newUser);
             const result = await userCollection.insertOne(newUser);
             res.send(result);
         })
 
         app.patch('/users/signin', async (req, res) => {
-            console.log(req.body?.lastSignInTime);
+            //console.log(req.body?.lastSignInTime);
             const email = req.body.email;
             const filter = { email };
             const updateDoc = {
@@ -136,9 +136,9 @@ async function run() {
         })
 
         app.patch('/users/profile', async (req, res) => {
-            console.log('✅ PATCH /users hit');
-            console.log('✅ Body:', req.body);
-            console.log('✅ Email:', req.body.email);
+            //console.log('✅ PATCH /users hit');
+            //console.log('✅ Body:', req.body);
+            //console.log('✅ Email:', req.body.email);
             const email = req.body.email;
             const filter = { email };
             const updateDoc = {
@@ -153,8 +153,8 @@ async function run() {
 
 
         // Send a ping to confirm a successful connection
-        await client.db("admin").command({ ping: 1 });
-        console.log("Pinged your deployment. You successfully connected to MongoDB!");
+        // await client.db("admin").command({ ping: 1 });
+        //console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
         // Ensures that the client will close when you finish/error
         // await client.close();
@@ -168,5 +168,5 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, () => {
-    console.log(`Coffee Shop Server running on ${port}`);
+    //console.log(`Coffee Shop Server running on ${port}`);
 })
